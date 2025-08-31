@@ -1,6 +1,7 @@
 package com.jomaleda.ravenpack.interview.service;
 
 import com.jomaleda.ravenpack.interview.annotation.SimulateLatency;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,13 +9,9 @@ import org.springframework.stereotype.Service;
  * Provides thread-safe caching to ensure idempotent behavior.
  */
 @Service
+@RequiredArgsConstructor
 public class ScoringService {
-
     private final CacheService cacheService;
-
-    public ScoringService(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
 
     /**
      * Gets the offensive content score for a message.

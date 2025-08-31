@@ -3,6 +3,7 @@ package com.jomaleda.ravenpack.interview.service;
 import com.jomaleda.ravenpack.interview.dto.InputMessage;
 import com.jomaleda.ravenpack.interview.dto.UserReport;
 import com.jomaleda.ravenpack.interview.model.UserStats;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -25,19 +26,12 @@ import java.util.stream.Stream;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class FileProcessorService {
     private final CsvService csvService;
     private final TranslationService translationService;
     private final ScoringService scoringService;
     private final ExecutorService taskExecutor;
-
-    public FileProcessorService(CsvService csvService, TranslationService translationService,
-                                ScoringService scoringService, ExecutorService taskExecutor) {
-        this.csvService = csvService;
-        this.translationService = translationService;
-        this.scoringService = scoringService;
-        this.taskExecutor = taskExecutor;
-    }
 
     /**
      * Processes a CSV file of user messages and generates a summary report.

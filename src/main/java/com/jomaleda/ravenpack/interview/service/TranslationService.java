@@ -1,6 +1,7 @@
 package com.jomaleda.ravenpack.interview.service;
 
 import com.jomaleda.ravenpack.interview.annotation.SimulateLatency;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,12 +9,9 @@ import org.springframework.stereotype.Service;
  * Provides thread-safe caching to ensure idempotent behavior.
  */
 @Service
+@RequiredArgsConstructor
 public class TranslationService {
     private final CacheService cacheService;
-
-    public TranslationService(CacheService cacheService) {
-        this.cacheService = cacheService;
-    }
 
     /**
      * Translates a message using cached results for performance.
