@@ -21,7 +21,7 @@ public class ScoringService {
      * @return score between 0.0 and 1.0
      */
     public float getScore(String message) {
-        return cacheService.computeIfAbsent(message, this::fetchScoreFromApi);
+        return cacheService.computeIfAbsent("score<->" + message, (key) -> this.fetchScoreFromApi(message));
     }
 
     /**

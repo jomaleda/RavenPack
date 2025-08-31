@@ -1,0 +1,19 @@
+user_id,message
+user_101,This is a normal message.
+user_202,I really like this platform!
+user_101,Here is my second message.
+user_303,This is a test message for another user.
+user_404,CHECK OUT THIS AMAZING DEAL NOW!!!
+user_101,I found this interesting article today.
+user_202,The weather is great today in Madrid.
+user_404,CHECK OUT THIS AMAZING DEAL NOW!!!
+user_505,This is a message with special characters, like a comma.
+user_606,Another user checking in.
+user_404,CHECK OUT THIS AMAZING DEAL NOW!!!
+user_707,"A message with ""quotes"" inside it."
+user_808,What time is it now?
+user_101,Okay, this is my last message.
+user_909,A unique message from a unique user.
+user_606,
+user_505,"This message, containing a comma, should be parsed correctly."
+user_202,Final thoughts for the day.

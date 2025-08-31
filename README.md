@@ -38,7 +38,7 @@ java -jar build/libs/content-moderation-system-0.0.1-SNAPSHOT.jar <path-to-input
 
 ### Example:
 ```bash
-java -jar build/libs/content-moderation-system-0.0.1-SNAPSHOT.jar data/input.csv data/output.csv
+java -jar build/libs/content-moderation-system-0.0.1-SNAPSHOT.jar data/sample1.csv data/output_sample1.csv
 ```
 
 ### File Formats

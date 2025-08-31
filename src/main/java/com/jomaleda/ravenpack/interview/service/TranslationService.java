@@ -21,7 +21,7 @@ public class TranslationService {
      * @return the translated message
      */
     public String translate(String message) {
-        return cacheService.computeIfAbsent(message, this::fetchTranslationFromApi);
+        return cacheService.computeIfAbsent("translate<->" + message, (key) -> this.fetchTranslationFromApi(message));
     }
 
     /**

@@ -2,7 +2,7 @@ package com.jomaleda.ravenpack.interview.service;
 
 import com.jomaleda.ravenpack.interview.dto.InputMessage;
 import com.jomaleda.ravenpack.interview.dto.UserReport;
-import com.opencsv.bean.CsvToBeanBuilder;
+import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsv;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
@@ -40,14 +40,36 @@ public class CsvService {
     public Stream<InputMessage> readMessages(String filePath) throws IOException {
         Path validatedPath = validatePath(filePath);
         try (var reader = Files.newBufferedReader(validatedPath)) {
-            var csvToBean = new CsvToBeanBuilder<InputMessage>(reader)
-                    .withType(InputMessage.class)
-                    .withIgnoreLeadingWhiteSpace(true)
-                    .withIgnoreEmptyLine(true)
-                    .build();
-
-            return csvToBean.stream().toList().stream();
+            return reader.lines()
+                    .skip(1) // Skip header
+                    .map(this::parseLineManually)
+                    .filter(msg -> msg.getUserId() != null && !msg.getUserId().trim().isEmpty())
+                    .collect(java.util.stream.Collectors.toList())
+                    .stream();
         }
+    }
+    
+    /**
+     * Parses a CSV line manually to handle malformed data where commas in message content are not properly quoted.
+     * Splits on the first comma to separate user_id from message, treating everything after as message content.
+     * 
+     * @param line the CSV line to parse
+     * @return InputMessage with parsed user_id and message, or empty message if no comma found
+     */
+    private InputMessage parseLineManually(String line) {
+        int firstComma = line.indexOf(',');
+        if (firstComma == -1) return new InputMessage(line.trim(), "");
+        
+        String userId = line.substring(0, firstComma).trim();
+        String message = line.substring(firstComma + 1).trim();
+
+        if (message.isEmpty()) return new InputMessage(userId, "");
+        
+        if (message.startsWith("\"") && message.endsWith("\"") && message.length() > 1) {
+            message = message.substring(1, message.length() - 1);
+        }
+        
+        return new InputMessage(userId, message);
     }
 
     /**
@@ -61,7 +83,9 @@ public class CsvService {
     public void writeReports(String filePath, List<UserReport> reports) {
         Path validatedPath = validatePath(filePath);
         try (Writer writer = new FileWriter(validatedPath.toFile())) {
-            StatefulBeanToCsv<UserReport> beanToCsv = new StatefulBeanToCsvBuilder<UserReport>(writer).build();
+            StatefulBeanToCsv<UserReport> beanToCsv = new StatefulBeanToCsvBuilder<UserReport>(writer)
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                    .build();
             beanToCsv.write(reports);
         } catch (IOException | CsvDataTypeMismatchException | CsvRequiredFieldEmptyException e) {
             throw new RuntimeException("Failed to write output CSV file", e);
@@ -78,10 +102,15 @@ public class CsvService {
      * @throws SecurityException if the path is outside the allowed directory
      */
     private Path validatePath(String filePath) {
-        Path path = Paths.get(filePath).normalize();
-        if (!path.startsWith(allowedDirectory)) {
+        try {
+            Path path = Paths.get(filePath).normalize().toAbsolutePath();
+            Path allowedAbsolute = allowedDirectory.toAbsolutePath().normalize();
+            if (!path.startsWith(allowedAbsolute)) {
+                throw new SecurityException("Invalid file path");
+            }
+            return path;
+        } catch (Exception e) {
             throw new SecurityException("Invalid file path");
         }
-        return path;
     }
 }

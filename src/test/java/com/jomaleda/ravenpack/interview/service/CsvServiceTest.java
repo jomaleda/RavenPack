@@ -10,9 +10,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class CsvServiceTest {
 
@@ -39,7 +40,7 @@ class CsvServiceTest {
         String csvContent = "user_id,message\nuser1,Hello world\nuser2,Test message";
         Files.writeString(testInputFile, csvContent);
 
-        List<InputMessage> messageList = csvService.readMessages("data/test_input.csv").toList();
+        List<InputMessage> messageList = csvService.readMessages("data/test_input.csv").collect(java.util.stream.Collectors.toList());
         
         assertEquals(2, messageList.size());
         assertEquals("user1", messageList.get(0).getUserId());
