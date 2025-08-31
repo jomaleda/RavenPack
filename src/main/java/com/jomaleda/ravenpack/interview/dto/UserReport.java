@@ -1,12 +1,16 @@
 package com.jomaleda.ravenpack.interview.dto;
 
 import com.opencsv.bean.CsvBindByName;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public record UserReport(
+@Data
+@AllArgsConstructor
+public class UserReport {
    @CsvBindByName(column = "user_id")
-   String userId,
+   private String userId;
    @CsvBindByName(column = "total_messages")
-   int totalMessages,
+   private int totalMessages;
    @CsvBindByName(column = "avg_score")
-   float avgScore
-) {}
+   private float avgScore;
+}

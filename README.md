@@ -30,6 +30,8 @@ This will generate an executable JAR file in the build/libs/ directory.
 ## How to Run the Application
 To run the application, you must provide the path to the input CSV file and the path where the output CSV file should be saved.
 
+**All input and output files should be stored on the `data` folder.** A `SecurityException` will be thrown if a file path does not start on `data` folder.
+
 ```bash
 java -jar build/libs/content-moderation-system-0.0.1-SNAPSHOT.jar <path-to-input.csv> <path-to-output.csv>
 ```
