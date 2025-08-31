@@ -3,8 +3,10 @@ package com.jomaleda.ravenpack.interview.dto;
 import com.opencsv.bean.CsvBindByName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class UserReport {
    @CsvBindByName(column = "user_id")
