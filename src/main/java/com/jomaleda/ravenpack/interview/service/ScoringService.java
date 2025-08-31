@@ -2,7 +2,6 @@ package com.jomaleda.ravenpack.interview.service;
 
 import com.jomaleda.ravenpack.interview.annotation.SimulateLatency;
 import org.springframework.stereotype.Service;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Service for scoring messages using a simulated external API.
@@ -10,10 +9,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Service
 public class ScoringService {
-    // Creates a dictionary in memory for keeping the pairs of <message, score> stored
-    // Avoid calculating new message for existing messages in cache
-    // NOTE: This cache mechanism should be replaced for a caching system like Redis for production execution
-    private final ConcurrentHashMap<String, Float> scoreCache = new ConcurrentHashMap<>();
+
+    private final CacheService cacheService;
+
+    public ScoringService(CacheService cacheService) {
+        this.cacheService = cacheService;
+    }
 
     /**
      * Gets the offensive content score for a message.
@@ -23,7 +24,7 @@ public class ScoringService {
      * @return score between 0.0 and 1.0
      */
     public float getScore(String message) {
-        return scoreCache.computeIfAbsent(message, this::fetchScoreFromApi);
+        return cacheService.computeIfAbsent(message, this::fetchScoreFromApi);
     }
 
     /**

@@ -2,22 +2,34 @@ package com.jomaleda.ravenpack.interview.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 class ScoringServiceTest {
 
     private ScoringService scoringService;
+    
+    @Mock
+    private CacheService cacheService;
 
     @BeforeEach
     void setUp() {
-        scoringService = new ScoringService();
+        MockitoAnnotations.openMocks(this);
+        when(cacheService.computeIfAbsent(any(String.class), any())).thenAnswer(invocation -> {
+            String key = invocation.getArgument(0);
+            Function<String, Float> supplier = invocation.getArgument(1);
+            return supplier.apply(key);
+        });
+        scoringService = new ScoringService(cacheService);
     }
 
     @Test
