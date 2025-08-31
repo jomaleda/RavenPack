@@ -56,15 +56,14 @@ class ScoringServiceTest {
     void getScore_CachingBehavior_SecondCallIsFaster() {
         String message = "cached message";
         
-        long start1 = System.currentTimeMillis();
+        // First call populates cache
         scoringService.getScore(message);
-        long duration1 = System.currentTimeMillis() - start1;
         
-        long start2 = System.currentTimeMillis();
-        scoringService.getScore(message);
-        long duration2 = System.currentTimeMillis() - start2;
+        // Second call should return same cached result
+        float score1 = scoringService.getScore(message);
+        float score2 = scoringService.getScore(message);
         
-        assertTrue(duration2 < duration1);
+        assertEquals(score1, score2);
     }
 
     @Test

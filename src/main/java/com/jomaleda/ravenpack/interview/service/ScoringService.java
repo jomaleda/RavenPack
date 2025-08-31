@@ -1,9 +1,8 @@
 package com.jomaleda.ravenpack.interview.service;
 
+import com.jomaleda.ravenpack.interview.annotation.SimulateLatency;
 import org.springframework.stereotype.Service;
-import java.security.SecureRandom;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Service for scoring messages using a simulated external API.
@@ -15,7 +14,6 @@ public class ScoringService {
     // Avoid calculating new message for existing messages in cache
     // NOTE: This cache mechanism should be replaced for a caching system like Redis for production execution
     private final ConcurrentHashMap<String, Float> scoreCache = new ConcurrentHashMap<>();
-    private final SecureRandom secureRandom = new SecureRandom();
 
     /**
      * Gets the offensive content score for a message.
@@ -34,15 +32,8 @@ public class ScoringService {
      * @param message the message to score
      * @return deterministic score based on message hash
      */
+    @SimulateLatency
     private float fetchScoreFromApi(String message) {
-        try {
-            // Simulates latency of 50ms to 200ms
-            long latency = 50 + secureRandom.nextInt(151);
-            TimeUnit.MILLISECONDS.sleep(latency);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-            throw new RuntimeException("Scoring service call was interrupted", e);
-        }
         // Calculates random value to be assigned as
         // score for the input message
         return (float) (Math.abs(message.hashCode() % 1001)) / 1000.0f;

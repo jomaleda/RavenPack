@@ -23,6 +23,9 @@ repositories {
 dependencies {
     // Core Spring Boot Starter
     implementation("org.springframework.boot:spring-boot-starter")
+    
+    // Spring AOP for method decorators
+    implementation("org.springframework.boot:spring-boot-starter-aop")
 
     // Library for parsing and writing CSV files
     implementation("com.opencsv:opencsv:5.9")
